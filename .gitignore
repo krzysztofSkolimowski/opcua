@@ -14,3 +14,5 @@
 examples/*
 
 venv/*
+
+weather_station.log
