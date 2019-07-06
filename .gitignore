@@ -16,3 +16,4 @@ examples/*
 venv/*
 
 weather_station.log
+__pycache__/*

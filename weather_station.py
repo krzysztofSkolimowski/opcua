@@ -62,6 +62,21 @@ class WeatherStation:
 
         self.frequency_of_fetching = frequency_of_fetching
 
+        # todo - it is work around not working opcua method
+        update_predictions = self.update_prediction
+
+        class HTTPRequestHandler(BaseHTTPRequestHandler):
+            def do_POST(self):
+                self.send_response(200)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
+
+                update_predictions()
+
+                self.wfile.write(b'Success!!!')
+
+        self.handler = HTTPRequestHandler
+
     def fetch_prediction(self):
         """
         fetches new predictions
@@ -113,26 +128,16 @@ class WeatherStation:
                 time.sleep(self.frequency_of_fetching)
 
     def start_web_server(self):
-        httpd = HTTPServer(('localhost', 8000), HTTPRequestHandler)
+        httpd = HTTPServer(('localhost', 8000), self.handler)
         print(httpd.serve_forever())
 
     def start(self):
+        """
+        Starts two threads
+        Necessary to expose rest api enpoint
+        """
         t1 = threading.Thread(target=self.start_opcua_server)
         t2 = threading.Thread(target=self.start_web_server)
 
         t2.start()
         t1.start()
-
-
-class HTTPRequestHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b'HTTP handler works!')
-
-    def do_POST(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
-
-        self.wfile.write("<html><body><h1>Success!!!</h1></body></html>")

@@ -1,6 +1,4 @@
 import logging
-import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from weather_station import WeatherStation
 
@@ -16,23 +14,6 @@ def main():
 
     station = WeatherStation(url, name, weather_api_key, city)
     station.start()
-
-    # t1 = threading.Thread(target=station.start_opcua_server)
-    # t2 = threading.Thread(target=station.start_web_server)
-    #
-    # t2.start()
-    # t1.start()
-
-# def start_web_server():
-#     httpd = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
-#     print(httpd.serve_forever())
-#
-#
-# class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
-#     def do_GET(self):
-#         self.send_response(200)
-#         self.end_headers()
-#         self.wfile.write(b'Hello, world!')
 
 
 if __name__ == '__main__':
