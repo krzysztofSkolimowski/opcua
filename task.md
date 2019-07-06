@@ -57,7 +57,17 @@ W oparciu o kody źródłowe utworzenie serwera oraz skonfigurowanie przestrzeni
 
 
 1. Zaimplementować metodę wymuszającą natychmiastowy odczyt ww. danych.
+    **status:gotowe, ale nie do końca**
+    
+    Implementacja metod w kodzie serwera, którego używam nie do końca działa. Naprawienie go wymagałoby commitowania do zewnętrznego repozytorium i zaakceptowania przez twórców serwera. 
+    W dodatku nie będzie to takie proste.
+    
+    Z tego powodu postanowiłem zaimplementować RESTowy, autoryzowany endpoint działający na HTTP, który umożliwia wymuszenie akutalizacji wartości pogody. 
+    
 
 1. Zaimplementować opcję logowania wszystkich danych udostępnianych przez serwer.
+    **status:gotowe**
+    Domyślny poziom logowania ustawiony jest na poziom: INFO. 
+    logi zapisują się w pliku: 
 
 1. Opcjonalnie opcja korzystania z więcej niż jednego źródła informacji o pogodzie wraz z metodą wyboru aktualnego źródła lub odpowiednio rozszerzoną przestrzenią adresową.

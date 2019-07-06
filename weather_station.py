@@ -1,8 +1,21 @@
+import threading
 import time
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import opcua
+import logging
 
 import open_weather
+
+
+# todo: make server implementation of method work
+# @uamethod
+# def update_predictions_uamethod():
+#     """
+#     forces update of predictions in weather station
+#     """
+#     logging.log(logging.INFO, "updating predictions")
+#     weather_station.update_prediction()
 
 
 class WeatherStation:
@@ -36,6 +49,8 @@ class WeatherStation:
         time_node = self.server.nodes.objects.add_object(idx, "time")
         self.time_holder = time_node.add_variable(idx, "last_fetching", time_of_last_fetching)
 
+        # todo: make server implementation of method work
+        # time_node.add_method(idx, "update_predictions_uamethod", update_predictions_uamethod)
         self.object_variables = {}
         for d in days.keys():
             idx = idx + 1
@@ -62,7 +77,7 @@ class WeatherStation:
         "conditions": string [status:string],
         "time": int [int - UNIX TIME],
         """
-        print("fetching data from https://openweathermap.org/api")
+        logging.log(logging.INFO, "fetching data from https://openweathermap.org/api")
         today, two_days_prediction, time_of_prediction = self.weather_fetcher.fetch_weather(2)
         return {"today": today, "tomorrow": two_days_prediction[0],
                 "day_after": two_days_prediction[1]}, time_of_prediction
@@ -73,6 +88,7 @@ class WeatherStation:
         :return:
         :rtype:
         """
+        logging.log(logging.INFO, "updating predictions")
         prediction, time_of_prediction = self.fetch_prediction()
         self.time_holder.set_value(time_of_prediction)
 
@@ -81,12 +97,13 @@ class WeatherStation:
             for v in variables.keys():
                 variables[v].set_value(prediction[day][v])
 
-    def start(self):
+    def start_opcua_server(self):
         """
         starts server and consecutive updates
         in case of any client errors creates a delay,
         leaving previous values as are with specified time
         """
+        logging.log(logging.INFO, "Weather station has started")
         self.server.start()
         while True:
             try:
@@ -95,17 +112,27 @@ class WeatherStation:
             finally:
                 time.sleep(self.frequency_of_fetching)
 
+    def start_web_server(self):
+        httpd = HTTPServer(('localhost', 8000), HTTPRequestHandler)
+        print(httpd.serve_forever())
 
-def main():
-    print("Weather station has started")
-    weather_api_key = "8bb678a3a68cc9d446a737556cb27923"
-    url = "opc.tcp://127.0.0.1:4840/weather"
-    name = "OPC_UA_WEATHER_STATION"
-    city = "Krakow,PL"
+    def start(self):
+        t1 = threading.Thread(target=self.start_opcua_server)
+        t2 = threading.Thread(target=self.start_web_server)
 
-    station = WeatherStation(url, name, weather_api_key, city)
-    station.start()
+        t2.start()
+        t1.start()
 
 
-if __name__ == '__main__':
-    main()
+class HTTPRequestHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b'HTTP handler works!')
+
+    def do_POST(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+
+        self.wfile.write("<html><body><h1>Success!!!</h1></body></html>")
