@@ -24,7 +24,7 @@ class WeatherStation:
     Contains opc-ua server, weather api client  and necessary methods.
     """
 
-    def __init__(self, opcua_url, server_name, api_key, place, frequency_of_fetching=30):
+    def __init__(self, opcua_url, server_name, api_key, place, frequency_of_fetching=30, address='localhost', port=80):
         """
         :param opcua_url: url of the server endpoint to expose
         :type opcua_url: string
@@ -39,6 +39,8 @@ class WeatherStation:
         :type frequency_of_fetching: int
         """
         self.weather_fetcher = open_weather.Client(api_key, place)
+        self.address = address
+        self.port = port
 
         self.server = opcua.Server()
         self.server.set_endpoint(opcua_url)
@@ -128,13 +130,13 @@ class WeatherStation:
                 time.sleep(self.frequency_of_fetching)
 
     def start_web_server(self):
-        httpd = HTTPServer(('localhost', 8000), self.handler)
+        httpd = HTTPServer((self.address, self.port), self.handler)
         print(httpd.serve_forever())
 
     def start(self):
         """
         Starts two threads
-        Necessary to expose rest api enpoint
+        Necessary to expose rest api endpoint
         """
         t1 = threading.Thread(target=self.start_opcua_server)
         t2 = threading.Thread(target=self.start_web_server)

@@ -19,7 +19,7 @@ def hour_of_the_day(unix_time):
 
 class Client:
     def __init__(self,
-                 api_key="8bb678a3a68cc9d446a737556cb27923",
+                 api_key,
                  place="Krakow,PL",
                  expected_forecast_time=15,
                  station_id="583436dd9643a9000196b8d6"):

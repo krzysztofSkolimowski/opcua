@@ -63,11 +63,12 @@ W oparciu o kody źródłowe utworzenie serwera oraz skonfigurowanie przestrzeni
     W dodatku nie będzie to takie proste.
     
     Z tego powodu postanowiłem zaimplementować RESTowy, autoryzowany endpoint działający na HTTP, który umożliwia wymuszenie akutalizacji wartości pogody. 
+    Implementacja metody opcua jest pozostawiona w komentarzach, oznaczona jako "todo"
     
 
 1. Zaimplementować opcję logowania wszystkich danych udostępnianych przez serwer.
     **status:gotowe**
     Domyślny poziom logowania ustawiony jest na poziom: INFO. 
-    logi zapisują się w pliku: 
+    logi domyślnie zapisują się w pliku: weather_station.log
 
 1. Opcjonalnie opcja korzystania z więcej niż jednego źródła informacji o pogodzie wraz z metodą wyboru aktualnego źródła lub odpowiednio rozszerzoną przestrzenią adresową.

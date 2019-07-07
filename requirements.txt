@@ -15,6 +15,7 @@ Click==7.0
 colorama==0.4.1
 colorize==1.1.0
 configobj==5.0.6
+configparser==3.7.4
 constantly==15.1.0
 cryptography==2.7
 cupshelpers==1.0
