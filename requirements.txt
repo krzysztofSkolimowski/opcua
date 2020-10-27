@@ -17,7 +17,7 @@ colorize==1.1.0
 configobj==5.0.6
 configparser==3.7.4
 constantly==15.1.0
-cryptography==2.7
+cryptography==3.2
 cupshelpers==1.0
 deluge==2.0.3
 distlib==0.2.9
