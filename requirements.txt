@@ -39,7 +39,7 @@ jsonschema==3.0.1
 lensfun==0.3.2
 lockfile==0.12.2
 louis==3.10.0
-lxml==4.3.4
+lxml==4.6.2
 Mako==1.0.13
 Markdown==3.1.1
 MarkupSafe==1.1.1
